@@ -93,6 +93,12 @@ class _PublishPublicationScreenState extends State<PublishPublicationScreen> {
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
+      context.read<UserProvider>().addPublication({
+        'title': _titleController.text,
+        'image': _imageUrlController.text.isNotEmpty ? _imageUrlController.text : null,
+        'time': 'À l\'instant',
+        'likes': 0,
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Publication partagée avec succès !')),
       );

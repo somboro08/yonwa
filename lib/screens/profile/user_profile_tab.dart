@@ -245,6 +245,25 @@ class _UserProfileTabState extends State<UserProfileTab> with TickerProviderStat
                 children: _tabs.map((tabName) => _buildTabContent(tabName, userProvider, isDark)).toList(),
               ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _openPublishSheet,
+        backgroundColor: YonwaColors.primary500,
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('Publier'),
+      ),
+    );
+  }
+
+  void _openPublishSheet() {
+    final userProvider = context.read<UserProvider>();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) =>
+          PublishContentSheet(role: userProvider.role),
     );
   }
 

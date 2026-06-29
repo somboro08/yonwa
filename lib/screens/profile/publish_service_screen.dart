@@ -98,6 +98,12 @@ class _PublishServiceScreenState extends State<PublishServiceScreen> {
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
+      context.read<UserProvider>().addService({
+        'title': _titleController.text,
+        'price': '${_priceController.text} FCFA',
+        'duration': _durationController.text,
+        'description': _descriptionController.text,
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Service publié avec succès !')),
       );

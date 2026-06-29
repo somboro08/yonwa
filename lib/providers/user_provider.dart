@@ -186,6 +186,121 @@ class UserProvider extends ChangeNotifier {
 
   // --- CONTENUS DYNAMIQUES DE DÉMO POUR LES ONGLETS ---
 
+  // --- ETAT DYNAMIQUE ---
+  final List<Map<String, dynamic>> _myProducts = [];
+  final List<Map<String, dynamic>> _myServices = [];
+  final List<Map<String, dynamic>> _myExperiences = [];
+  final List<Map<String, dynamic>> _myPublications = [];
+
+  // Getters dynamiques enrichis
+  List<Map<String, dynamic>> get products => [..._myProducts, ..._getMockProducts()];
+  List<Map<String, dynamic>> get services => [..._myServices, ..._getMockServices()];
+  List<Map<String, dynamic>> get experiences => [..._myExperiences, ..._getMockExperiences()];
+  List<Map<String, dynamic>> get publications => [..._myPublications, ..._getMockPublications()];
+
+  // Méthodes d'ajout
+  void addProduct(Map<String, dynamic> product) {
+    _myProducts.add(product);
+    notifyListeners();
+  }
+
+  void addService(Map<String, dynamic> service) {
+    _myServices.add(service);
+    notifyListeners();
+  }
+
+  void addExperience(Map<String, dynamic> exp) {
+    _myExperiences.add(exp);
+    notifyListeners();
+  }
+
+  void addPublication(Map<String, dynamic> pub) {
+    _myPublications.add(pub);
+    notifyListeners();
+  }
+
+  // Helper pour renommer les getters de mock existants
+  List<Map<String, dynamic>> _getMockProducts() {
+    switch (_role) {
+      case UserRole.artisan:
+        return [
+          {'title': 'Jarre d\'Abomey en argile', 'price': '8 500 FCFA', 'image': 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?q=80&w=300'},
+          {'title': 'Canari traditionnel décoré', 'price': '6 000 FCFA', 'image': 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=300'},
+          {'title': 'Vase en céramique ocre', 'price': '12 000 FCFA', 'image': 'https://images.unsplash.com/photo-1580481072645-022f9a6dbf27?q=80&w=300'},
+        ];
+      case UserRole.artisanConcepteur:
+        return [
+          {'title': 'Fauteuil Royal réinventé', 'price': '185 000 FCFA', 'image': 'https://images.unsplash.com/photo-1592078615290-033ee584e267?q=80&w=300'},
+          {'title': 'Masque mural contemporain', 'price': '45 000 FCFA', 'image': 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=300'},
+        ];
+      case UserRole.artisanRevendeur:
+        return [
+          {'title': 'Pagne tissé indigo (2 yards)', 'price': '15 000 FCFA', 'image': 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=300'},
+          {'title': 'Écharpe en coton bio teint', 'price': '7 500 FCFA', 'image': 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=300'},
+        ];
+      case UserRole.revendeur:
+        return [
+          {'title': 'Statuette vaudou en laiton', 'price': '18 000 FCFA', 'image': 'https://images.unsplash.com/photo-1606744824163-985d376605aa?q=80&w=300'},
+          {'title': 'Sac en raphia coloré', 'price': '5 500 FCFA', 'image': 'https://images.unsplash.com/photo-1524498250077-3a9f0c572269?q=80&w=300'},
+          {'title': 'Coffret d\'épices du Bénin', 'price': '4 000 FCFA', 'image': 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=300'},
+        ];
+      default:
+        return [];
+    }
+  }
+
+  List<Map<String, dynamic>> _getMockServices() {
+    switch (_role) {
+      case UserRole.guideTouristique:
+        return [
+          {'title': 'Accompagnement personnalisé à la journée', 'duration': '8 heures', 'price': '15 000 FCFA', 'icon': Icons.directions_run_rounded},
+          {'title': 'Service de chauffeur & traducteur', 'duration': 'Selon besoin', 'price': 'Sur devis', 'icon': Icons.directions_car_rounded},
+        ];
+      case UserRole.artisanConcepteur:
+        return [
+          {'title': 'Atelier de design collaboratif', 'duration': '3 heures', 'price': '30 000 FCFA', 'icon': Icons.palette_rounded},
+          {'title': 'Conception de mobilier sur mesure', 'duration': 'Projet complet', 'price': 'Sur devis', 'icon': Icons.architecture_rounded},
+        ];
+      default:
+        return [];
+    }
+  }
+
+  List<Map<String, dynamic>> _getMockExperiences() {
+    switch (_role) {
+      case UserRole.guideTouristique:
+        return [
+          {'title': 'Visite privée de la cité lacustre de Ganvié', 'price': '25 000 FCFA / pers', 'rating': '4.9 (42 avis)', 'image': 'https://www.gouv.bj/upload/images/banners/546730049088001761344719.png'},
+          {'title': 'Pèlerinage historique sur la Route des Esclaves', 'price': '15 000 FCFA / pers', 'rating': '4.8 (38 avis)', 'image': 'https://images.unsplash.com/photo-1590674899484-d56419821d99?q=80&w=300'},
+        ];
+      case UserRole.voyageur:
+        return [
+          {'title': 'Ganvié au coucher du soleil', 'price': '25 000 FCFA', 'rating': 'Réservez à nouveau', 'image': 'https://www.gouv.bj/upload/images/banners/546730049088001761344719.png'},
+        ];
+      default:
+        return [];
+    }
+  }
+
+  List<Map<String, dynamic>> _getMockPublications() {
+    return [
+      {
+        'title': 'Nouvelle création disponible au showroom ✨',
+        'time': 'Il y a 2 heures',
+        'image': 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=400',
+        'likes': 42,
+      },
+      {
+        'title': 'Partage du savoir-faire avec la nouvelle génération.',
+        'time': 'Il y a 1 jour',
+        'image': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400',
+        'likes': 78,
+      },
+    ];
+  }
+
+  // --- FIN ETAT DYNAMIQUE ---
+
   // Produits
   List<Map<String, dynamic>> get products {
     switch (_role) {

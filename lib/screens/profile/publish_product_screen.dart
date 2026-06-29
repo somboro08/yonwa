@@ -100,8 +100,14 @@ class _PublishFormShell extends StatelessWidget {
           const SizedBox(height: 12),
           ElevatedButton(
             onPressed: () {
+              context.read<UserProvider>().addProduct({
+                'title': _titleController.text,
+                'price': '${_priceController.text} FCFA',
+                'image': _imageController.text,
+                'description': _descriptionController.text,
+              });
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('$title enregistre en mode mock')),
+                const SnackBar(content: Text('Produit publié avec succès !')),
               );
               Navigator.pop(context);
             },

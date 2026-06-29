@@ -965,7 +965,7 @@ class _HomeScreenState extends State<HomeScreen>
                         borderRadius: BorderRadius.circular(YonwaRadius.xl),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
+                            color: const Color.fromARGB(191, 0, 0, 0).withOpacity(0.15),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),

@@ -101,6 +101,13 @@ class _PublishExperienceScreenState extends State<PublishExperienceScreen> {
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
+      context.read<UserProvider>().addExperience({
+        'title': _titleController.text,
+        'price': '${_priceController.text} FCFA',
+        'duration': _durationController.text,
+        'description': _descriptionController.text,
+        'rating': '5.0 (Nouveau)',
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Expérience publiée avec succès !')),
       );
