@@ -108,13 +108,13 @@ class _DetailedProfileScreenState extends State<DetailedProfileScreen>
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.black.withOpacity(0.3),
+                            Colors.black.withOpacity(0.5),
                             Colors.black.withOpacity(0.1),
                             isDark
                                 ? YonwaColors.neutral900
                                 : const Color(0xFFF5F6FA),
                           ],
-                          stops: const [0.0, 0.4, 1.0],
+                          stops: const [0.0, 0.5, 1.0],
                         ),
                       ),
                     ),

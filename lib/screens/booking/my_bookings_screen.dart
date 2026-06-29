@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../providers/commerce_provider.dart';
 import '../../theme/yonwa_theme.dart';
+import '../../core/responsive/responsive_layout.dart';
+import '../../core/layout/app_shell.dart';
+import '../../shared/widgets/floating_navbar.dart';
 
 class MyBookingsScreen extends StatelessWidget {
   const MyBookingsScreen({super.key});
@@ -12,24 +15,34 @@ class MyBookingsScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final orders = context.watch<CommerceProvider>().orders;
 
-    return Scaffold(
-      backgroundColor: isDark ? YonwaColors.neutral900 : YonwaColors.neutral50,
-      appBar: AppBar(
-        title: const Text('Mes reservations & paiements'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: orders.isEmpty
-          ? const Center(child: Text('Aucune reservation pour le moment'))
-          : ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: orders.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final order = orders[index];
-                return _OrderCard(order: order, isDark: isDark);
-              },
+    final body = orders.isEmpty
+        ? const Center(child: Text('Aucune reservation pour le moment'))
+        : ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            itemCount: orders.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final order = orders[index];
+              return _OrderCard(order: order, isDark: isDark);
+            },
+          );
+
+    return ResponsiveLayout(
+      mobile: Scaffold(
+        backgroundColor: isDark ? YonwaColors.neutral900 : YonwaColors.neutral50,
+        drawer: const Drawer(),
+        body: SafeArea(
+          child: Builder(
+            builder: (context) => Column(
+              children: [
+                FloatingNavbar(onMenuPressed: () => Scaffold.of(context).openDrawer()),
+                Expanded(child: body),
+              ],
             ),
+          ),
+        ),
+      ),
+      desktop: AppShell(child: body),
     );
   }
 }

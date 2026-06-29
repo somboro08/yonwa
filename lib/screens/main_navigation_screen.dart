@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/tourism_theme.dart';
+import '../../theme/yonwa_theme.dart';
 import 'home/home_screen.dart';
 import 'pro/dashboard_screen.dart';
 import 'ai_assistant_screen.dart';
@@ -27,8 +27,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() => _selectedIndex = index),
-        selectedItemColor: TourismColors.primary500,
-        unselectedItemColor: TourismColors.neutral400,
+        selectedItemColor: YonwaColors.primary500,
+        unselectedItemColor: YonwaColors.neutral400,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explorer'),
           BottomNavigationBarItem(icon: Icon(Icons.psychology), label: 'Assistant'),
@@ -38,5 +38,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 }
+
 
 

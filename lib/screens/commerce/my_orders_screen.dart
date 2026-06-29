@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../theme/yonwa_theme.dart';
 import '../../providers/commerce_provider.dart';
+import '../../core/responsive/responsive_layout.dart';
+import '../../core/layout/app_shell.dart';
+import '../../shared/widgets/floating_navbar.dart';
 
 class MyOrdersScreen extends StatefulWidget {
   const MyOrdersScreen({super.key});
@@ -24,19 +27,12 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         ? orders
         : orders.where((order) => order.status == _selectedFilter).toList();
 
-    return Scaffold(
-      backgroundColor: isDark ? YonwaColors.neutral900 : YonwaColors.neutral50,
-      appBar: AppBar(
-        title: const Text('Mes réservations'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Column(
+    final body = Column(
         children: [
           // Filter chips
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Row(
               children: [
                 FilterChip(
@@ -106,7 +102,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     ),
                   )
                 : ListView.separated(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                     itemCount: filteredOrders.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
@@ -116,7 +112,24 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                   ),
           ),
         ],
+      );
+
+    return ResponsiveLayout(
+      mobile: Scaffold(
+        backgroundColor: isDark ? YonwaColors.neutral900 : YonwaColors.neutral50,
+        drawer: const Drawer(),
+        body: SafeArea(
+          child: Builder(
+            builder: (context) => Column(
+              children: [
+                FloatingNavbar(onMenuPressed: () => Scaffold.of(context).openDrawer()),
+                Expanded(child: body),
+              ],
+            ),
+          ),
+        ),
       ),
+      desktop: AppShell(child: body),
     );
   }
 }

@@ -2,25 +2,16 @@
 //  USER MODEL
 // ─────────────────────────────────────────────
 
-enum UserRole { voyageur, artisan, artisanConcepteur, artisanRevendeur, guideTouristique, revendeur }
+enum UserRole { 
+  voyageur('Utilisateur standard'), 
+  artisan('Artisan'), 
+  artisanConcepteur('Artisan concepteur'), 
+  artisanRevendeur('Artisan revendeur'), 
+  guideTouristique('Guide touristique'), 
+  revendeur('Revendeur');
 
-extension UserRoleExtension on UserRole {
-  String get displayName {
-    switch (this) {
-      case UserRole.voyageur:
-        return 'Utilisateur standard';
-      case UserRole.artisan:
-        return 'Artisan';
-      case UserRole.artisanConcepteur:
-        return 'Artisan concepteur';
-      case UserRole.artisanRevendeur:
-        return 'Artisan revendeur';
-      case UserRole.guideTouristique:
-        return 'Guide touristique';
-      case UserRole.revendeur:
-        return 'Revendeur';
-    }
-  }
+  final String displayName;
+  const UserRole(this.displayName);
 }
 
 enum IdentityVerificationStatus { none, pending, verified, rejected } 

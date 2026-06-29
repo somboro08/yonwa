@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../theme/yonwa_theme.dart';
 import 'chat_detail_screen.dart';
+import '../../core/responsive/responsive_layout.dart';
+import '../../core/layout/app_shell.dart';
+import '../../shared/widgets/floating_navbar.dart';
 
 // ─── Data ────────────────────────────────────
 
@@ -49,14 +52,12 @@ class _MessagesInboxScreenState extends State<MessagesInboxScreen> with SingleTi
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final filtered = ChatContacts.where((c) => c.name.toLowerCase().contains(_query.toLowerCase())).toList();
 
-    return Scaffold(
-      backgroundColor: isDark ? YonwaColors.neutral900 : const Color(0xFFF8F4EF),
-      body: Column(
+    final body = Column(
         children: [
           _Header(isDark: isDark, tab: _tab),
           // Search
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
             child: Container(
               height: 44,
               padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -91,7 +92,7 @@ class _MessagesInboxScreenState extends State<MessagesInboxScreen> with SingleTi
             height: 90,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               itemCount: ChatContacts.where((c) => c.online).length,
               itemBuilder: (_, i) {
                 final c = ChatContacts.where((c) => c.online).toList()[i];
@@ -103,7 +104,7 @@ class _MessagesInboxScreenState extends State<MessagesInboxScreen> with SingleTi
           // Conversations
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               itemCount: filtered.length,
               itemBuilder: (_, i) => _ConversationTile(
                 contact: filtered[i],
@@ -113,8 +114,13 @@ class _MessagesInboxScreenState extends State<MessagesInboxScreen> with SingleTi
             ),
           ),
         ],
-      ),
-      floatingActionButton: Container(
+      );
+
+    return ResponsiveLayout(
+      mobile: Scaffold(
+        backgroundColor: isDark ? YonwaColors.neutral900 : const Color(0xFFF8F4EF),
+        drawer: const Drawer(),
+        floatingActionButton: Container(
         width: 52, height: 52,
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
@@ -122,6 +128,28 @@ class _MessagesInboxScreenState extends State<MessagesInboxScreen> with SingleTi
         ),
         child: IconButton(icon: const Icon(Icons.edit_rounded, color: Colors.white, size: 22), onPressed: () {}),
       ),
+        body: SafeArea(
+          child: Builder(
+            builder: (context) => Column(
+              children: [
+                FloatingNavbar(onMenuPressed: () => Scaffold.of(context).openDrawer()),
+                Expanded(child: body),
+              ],
+            ),
+          ),
+        ),
+      ),
+      desktop: AppShell(child: Scaffold(
+        backgroundColor: isDark ? YonwaColors.neutral900 : const Color(0xFFF8F4EF),
+        floatingActionButton: Container(
+        width: 52, height: 52,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(colors: [YonwaColors.primary500, YonwaColors.secondary], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        ),
+        child: IconButton(icon: const Icon(Icons.edit_rounded, color: Colors.white, size: 22), onPressed: () {}),
+      ),
+        body: body)),
     );
   }
 }

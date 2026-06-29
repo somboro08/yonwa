@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart' as legacy_provider;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,10 +9,9 @@ import 'theme/yonwa_theme.dart';
 import 'theme/theme_provider.dart';
 import 'providers/user_provider.dart';
 import 'providers/commerce_provider.dart';
-import 'screens/onboarding/onboarding_screen.dart';
-import 'screens/onboarding/onboarding_questionnaire.dart';
-import 'screens/auth_screen.dart';
-import 'screens/home/home_screen.dart';
+import 'providers/booking_provider.dart';
+import 'core/theme/theme.dart';
+import 'core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,44 +27,33 @@ void main() async {
 
   await initializeDateFormatting('fr', null);
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => CommerceProvider()),
-      ],
-      child: const YonwaApp(),
+    const ProviderScope(
+      child: YonwaApp(),
     ),
   );
 }
 
-class YonwaApp extends StatelessWidget {
+class YonwaApp extends ConsumerWidget {
   const YonwaApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
-
-    return MaterialApp(
-      title: 'Yonwa',
-      debugShowCheckedModeBanner: false,
-      theme: yonwaLightTheme(),
-      darkTheme: yonwaDarkTheme(),
-      themeMode: themeProvider.themeMode,
-      home: const _Splash(),
-      routes: {
-        '/onboarding': (_) => const OnboardingScreen(),
-        '/questionnaire': (_) => const OnboardingQuestionnaire(),
-        '/auth': (_) => const AuthScreen(),
-        '/home': (_) => const HomeScreen(),
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    return legacy_provider.MultiProvider(
+      providers: [
+        legacy_provider.ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        legacy_provider.ChangeNotifierProvider(create: (_) => UserProvider()),
+        legacy_provider.ChangeNotifierProvider(create: (_) => CommerceProvider()),
+        legacy_provider.ChangeNotifierProvider(create: (_) => BookingProvider()),
+      ],
+      child: MaterialApp.router(
+        title: 'Yonwa',
+        debugShowCheckedModeBanner: false,
+        theme: getYonwaTheme(),
+        routerConfig: appRouter,
+      ),
     );
   }
 }
-
-// ─────────────────────────────────────────────
-//  SPLASH — decides where to route
-// ─────────────────────────────────────────────
 
 class _Splash extends StatefulWidget {
   const _Splash();

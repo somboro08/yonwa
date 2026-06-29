@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/tourism_theme.dart';
+import '../../theme/yonwa_theme.dart';
 
 class ProfessionalDashboardScreen extends StatelessWidget {
   const ProfessionalDashboardScreen({super.key});
@@ -9,11 +9,11 @@ class ProfessionalDashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Dashboard Professionnel')),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(TourismSpacing.md),
+        padding: const EdgeInsets.all(YonwaSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Vos statistiques', style: TourismTextStyles.h2),
+            Text('Vos statistiques', style: YonwaTextStyles.h2),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -23,7 +23,7 @@ class ProfessionalDashboardScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            Text('Réservations récentes', style: TourismTextStyles.h2),
+            Text('Réservations récentes', style: YonwaTextStyles.h2),
             const SizedBox(height: 16),
             ListView.builder(
               shrinkWrap: true,
@@ -42,13 +42,13 @@ class ProfessionalDashboardScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: TourismColors.neutral100,
-          borderRadius: BorderRadius.circular(TourismRadius.md),
+          color: YonwaColors.neutral100,
+          borderRadius: BorderRadius.circular(YonwaRadius.md),
         ),
         child: Column(
           children: [
-            Text(value, style: TourismTextStyles.h1.copyWith(color: TourismColors.primary500)),
-            Text(label, style: TourismTextStyles.label),
+            Text(value, style: YonwaTextStyles.h1.copyWith(color: YonwaColors.primary500)),
+            Text(label, style: YonwaTextStyles.label),
           ],
         ),
       ),
@@ -61,11 +61,12 @@ class ProfessionalDashboardScreen extends StatelessWidget {
       subtitle: const Text('15 - 17 Juin'),
       trailing: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(color: TourismColors.success.withOpacity(0.1), borderRadius: BorderRadius.circular(TourismRadius.sm)),
-        child: Text('Confirmé', style: TourismTextStyles.caption.copyWith(color: TourismColors.success)),
+        decoration: BoxDecoration(color: YonwaColors.success.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(YonwaRadius.sm)),
+        child: Text('Confirmé', style: YonwaTextStyles.caption.copyWith(color: YonwaColors.success)),
       ),
     );
   }
 }
+
 
 

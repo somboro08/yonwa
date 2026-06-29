@@ -8,7 +8,7 @@ import '../../theme/yonwa_theme.dart';
 import '../../theme/theme_provider.dart';
 import '../../models/models.dart';
 import '../../widgets/listing_card.dart';
-import '../../widgets/yonwa_badge.dart';
+import '../../widgets/horizontal_product_scroll.dart';
 import '../../services/auth_service.dart';
 import 'notification_screen.dart';
 import 'explorer_screen.dart';
@@ -48,29 +48,39 @@ class _HomeScreenState extends State<HomeScreen>
   // Carousel images
   final List<Map<String, String>> _carouselImages = [
     {
-      'image': 'assets/images/hero1.png',
+      'image': 'assets/images/hero1.jpg',
       'title': 'Découvrez Ganvié',
-      'subtitle': "La Venise d\'Afrique",
+      'subtitle': "La Venise d'Afrique",
     },
     {
-      'image': 'assets/images/hero2.png',
+      'image': 'assets/images/hero2.jpg',
       'title': 'Artisanat Béninois',
       'subtitle': 'Savoir-faire ancestral',
     },
     {
-      'image': 'assets/images/hero3.png',
+      'image': 'assets/images/hero3.jpg',
       'title': 'Cuisine Traditionnelle',
       'subtitle': 'Saveurs du Bénin',
     },
     {
-      'image': 'assets/images/hero4.png',
+      'image': 'assets/images/hero4.jpeg',
       'title': 'Plages de Ouidah',
       'subtitle': 'Paradis tropical',
     },
     {
-      'image': 'assets/images/hero5.png',
+      'image': 'assets/images/hero6.jpeg',
       'title': 'Palais Royaux d\'Abomey',
       'subtitle': 'Patrimoine de l\'humanité',
+    },
+    {
+      'image': 'assets/images/hero8.jpeg',
+      'title': 'Festivals du Bénin',
+      'subtitle': 'Couleurs et traditions',
+    },
+    {
+      'image': 'assets/images/hero10.jpeg',
+      'title': 'Nature Béninoise',
+      'subtitle': 'Paysages à couper le souffle',
     },
   ];
 
@@ -80,10 +90,8 @@ class _HomeScreenState extends State<HomeScreen>
       'nom': 'Amina Cissé',
       'role': UserRole.artisan,
       'ville': 'Bohicon',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=300',
-      'coverImage':
-          'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=800',
+      'photoUrl': 'assets/images/hero22.jpeg',
+      'coverImage': 'assets/images/hero11.jpeg',
       'rating': '4.9',
       'bio':
           'Artisane spécialisée dans le tissage traditionnel d\'indigo. J\'utilise des pigments organiques du Bénin.',
@@ -100,10 +108,8 @@ class _HomeScreenState extends State<HomeScreen>
       'nom': 'Sika Adjovi',
       'role': UserRole.artisan,
       'ville': 'Abomey',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300',
-      'coverImage':
-          'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?q=80&w=800',
+      'photoUrl': 'assets/images/hero25.jpeg',
+      'coverImage': 'assets/images/hero12.jpeg',
       'rating': '4.7',
       'bio':
           'Créatrice de jarres en terre cuite d\'Abomey. Mes oeuvres perpétuent la mémoire royale béninoise.',
@@ -120,10 +126,8 @@ class _HomeScreenState extends State<HomeScreen>
       'nom': 'Koffi Djibo',
       'role': UserRole.artisanConcepteur,
       'ville': 'Ouidah',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300',
-      'coverImage':
-          'assets/images/hero29.jpeg',
+      'photoUrl': 'assets/images/hero26.jpeg',
+      'coverImage': 'assets/images/hero29.jpeg',
       'rating': '4.8',
       'bio':
           'Concepteur-artisan spécialisé dans la sculpture contemporaine sur bois de teck et d\'ébène.',
@@ -136,15 +140,12 @@ class _HomeScreenState extends State<HomeScreen>
       'isVerified': true,
       'telephone': '+229 90 22 11 00',
     },
-
     {
       'nom': 'Fati Salifou',
       'role': UserRole.artisanConcepteur,
       'ville': 'Parakou',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=300',
-      'coverImage':
-          'assets/images/hero28.jpeg',
+      'photoUrl': 'assets/images/hero27.jpeg',
+      'coverImage': 'assets/images/hero28.jpeg',
       'rating': '4.9',
       'bio':
           'Créatrice conceptrice de bijoux de luxe en bronze et pierres semi-précieuses du Bénin.',
@@ -161,10 +162,8 @@ class _HomeScreenState extends State<HomeScreen>
       'nom': 'Binta Sow',
       'role': UserRole.artisanRevendeur,
       'ville': 'Porto-Novo',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=300',
-      'coverImage':
-          'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=800',
+      'photoUrl': 'assets/images/hero30.jpeg',
+      'coverImage': 'assets/images/hero13.jpeg',
       'rating': '4.6',
       'bio':
           'Revendeuse de paniers tressés et batiks fabriqués à la main par des coopératives de femmes au Bénin.',
@@ -181,10 +180,8 @@ class _HomeScreenState extends State<HomeScreen>
       'nom': 'Yao Mensah',
       'role': UserRole.artisanRevendeur,
       'ville': 'Cotonou',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=300',
-      'coverImage':
-          'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=800',
+      'photoUrl': 'assets/images/hero31.jpeg',
+      'coverImage': 'assets/images/hero14.jpeg',
       'rating': '4.5',
       'bio':
           'Collectionneur et revendeur de batiks authentiques et de sculptures traditionnelles.',
@@ -201,10 +198,8 @@ class _HomeScreenState extends State<HomeScreen>
       'nom': 'Koffi Mensah',
       'role': UserRole.guideTouristique,
       'ville': 'Ganvié',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=300',
-      'coverImage':
-          'https://www.gouv.bj/upload/images/banners/546730049088001761344719.png',
+      'photoUrl': 'assets/images/hero32.jpeg',
+      'coverImage': 'assets/images/hero15.jpeg',
       'rating': '4.9',
       'bio':
           'Guide touristique officiel à Ganvié. Découvrez l\'histoire lacustre et les traditions Tofinu.',
@@ -221,10 +216,8 @@ class _HomeScreenState extends State<HomeScreen>
       'nom': 'Lionel Gbèdo',
       'role': UserRole.guideTouristique,
       'ville': 'Ouidah',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1489980508314-941910ded1f4?q=80&w=300',
-      'coverImage':
-          'https://images.unsplash.com/photo-1590674899484-d56419821d99?q=80&w=800',
+      'photoUrl': 'assets/images/hero33.jpeg',
+      'coverImage': 'assets/images/hero16.jpeg',
       'rating': '4.8',
       'bio':
           'Spécialiste de l\'histoire de Ouidah, du culte vaudou et de la route des esclaves. Visites guidées personnalisées.',
@@ -241,10 +234,8 @@ class _HomeScreenState extends State<HomeScreen>
       'nom': 'Gnonnan Pierre',
       'role': UserRole.revendeur,
       'ville': 'Cotonou',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300',
-      'coverImage':
-          'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=800',
+      'photoUrl': 'assets/images/hero34.jpeg',
+      'coverImage': 'assets/images/hero17.jpeg',
       'rating': '4.7',
       'bio':
           'Galeriste à Cotonou. Revendeur agréé d\'oeuvres d\'art contemporaines et traditionnelles béninoises.',
@@ -261,10 +252,8 @@ class _HomeScreenState extends State<HomeScreen>
       'nom': 'Chantal Agbado',
       'role': UserRole.revendeur,
       'ville': 'Grand-Popo',
-      'photoUrl':
-          'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=300',
-      'coverImage':
-          'https://images.unsplash.com/photo-1524498250077-3a9f0c572269?q=80&w=800',
+      'photoUrl': 'assets/images/hero35.jpeg',
+      'coverImage': 'assets/images/hero18.jpg',
       'rating': '4.4',
       'bio':
           'Boutique d\'objets de décoration, souvenirs et produits du terroir à Grand-Popo.',
@@ -403,6 +392,12 @@ class _HomeScreenState extends State<HomeScreen>
     _carouselController.dispose();
     _searchController.dispose();
     super.dispose();
+  }
+
+  /// Returns the appropriate ImageProvider based on path type (asset or network).
+  ImageProvider<Object> _imageProvider(String path) {
+    final isNetwork = path.startsWith('http://') || path.startsWith('https://');
+    return isNetwork ? NetworkImage(path) : AssetImage(path) as ImageProvider<Object>;
   }
 
   @override
@@ -703,6 +698,18 @@ class _HomeScreenState extends State<HomeScreen>
                     _buildCategories(isDark),
                     const SizedBox(height: YonwaSpacing.md),
 
+                    // Section scrollable horizontale
+                    HorizontalProductScroll(
+                      title: 'Artisans et Expériences',
+                      items: _actors.map((actor) => {
+                        'title': actor['nom'],
+                        'price': actor['role'] == UserRole.guideTouristique ? 'Voir expérience' : 'Voir produits',
+                        'image': actor['photoUrl'],
+                        'onTap': () => _openActorProfile(actor),
+                      }).toList(),
+                    ),
+                    const SizedBox(height: YonwaSpacing.md),
+
                     // Sections de profils par catégorie
                     _buildProfileSections(isDark),
                     const SizedBox(height: YonwaSpacing.xs),
@@ -774,7 +781,7 @@ class _HomeScreenState extends State<HomeScreen>
       children: [
         // Carousel
         SizedBox(
-          height: size.height * 0.45,
+          height: size.height * 0.35,
           width: double.infinity,
           child: PageView.builder(
             controller: _carouselController,
@@ -798,27 +805,20 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
                   ),
-                  // Gradient Overlay (Gray theme-based with better visibility)
+                  // Gradient Overlay (Blue Tint)
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
+                          Colors.blue.withOpacity(0.4),
+                          Colors.blue.withOpacity(0.2),
                           isDark
-                              ? YonwaColors.neutral800.withOpacity(0.6)
-                              : YonwaColors.neutral500.withOpacity(0.5),
-                          isDark
-                              ? YonwaColors.neutral700.withOpacity(0.5)
-                              : YonwaColors.neutral500.withOpacity(0.4),
-                          isDark
-                              ? YonwaColors.neutral600.withOpacity(0.6)
-                              : YonwaColors.neutral600.withOpacity(0.55),
-                          isDark
-                              ? YonwaColors.neutral900.withOpacity(0.9)
-                              : YonwaColors.background.withOpacity(0.98),
+                              ? YonwaColors.neutral900.withOpacity(0.8)
+                              : YonwaColors.background.withOpacity(0.9),
                         ],
-                        stops: const [0.0, 0.25, 0.6, 1.0],
+                        stops: const [0.0, 0.5, 1.0],
                       ),
                     ),
                   ),
@@ -1728,7 +1728,7 @@ class _HomeScreenState extends State<HomeScreen>
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(actor['coverImage']),
+                        image: _imageProvider(actor['coverImage'] ?? 'assets/images/hero1.jpg'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -1744,7 +1744,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       child: CircleAvatar(
                         radius: 28,
-                        backgroundImage: NetworkImage(actor['photoUrl']),
+                        backgroundImage: _imageProvider(actor['photoUrl'] ?? 'assets/images/hero22.jpeg'),
                         backgroundColor: YonwaColors.neutral200,
                       ),
                     ),

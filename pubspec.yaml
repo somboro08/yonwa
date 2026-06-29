@@ -56,6 +56,10 @@ dependencies:
   printing: ^5.14.3
   flutter_svg: ^2.3.0
   dio: ^5.9.2
+  hugeicons: ^1.1.7
+  flutter_animate: ^4.5.2
+  flutter_riverpod: ^3.3.2
+  google_fonts: ^8.1.0
 
 dev_dependencies:
   flutter_test:
