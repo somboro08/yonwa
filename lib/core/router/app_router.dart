@@ -5,11 +5,9 @@ import '../../features/splash/splash_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/onboarding/questionnaire_screen.dart';
 import '../../features/auth/auth_screen.dart';
-import '../../features/home/home_screen.dart';
-import '../../features/explore/explore_screen.dart';
+import '../../screens/main_navigation_screen.dart';
 import '../../features/profile/profile_screen.dart';
-import '../../features/my_profile/my_profile_screen.dart';
-import '../../features/booking/booking_screen.dart';
+import '../../features/search/search_screen.dart';
 import '../layout/app_shell.dart';
 
 CustomTransitionPage<void> _buildCube3DTransition({
@@ -87,49 +85,36 @@ final GoRouter appRouter = GoRouter(
       ),
     ),
     
-    // Main App pages wrapped in AppShell
-    ShellRoute(
-      builder: (context, state, child) => AppShell(child: child),
-      routes: [
-        GoRoute(
-          path: '/home',
-          pageBuilder: (context, state) => _buildCube3DTransition(
-            state: state,
-            child: const HomeScreen(),
-          ),
-        ),
-        GoRoute(
-          path: '/explore',
-          pageBuilder: (context, state) => _buildCube3DTransition(
-            state: state,
-            child: const ExploreScreen(),
-          ),
-        ),
-        GoRoute(
-          path: '/profile/:id',
-          pageBuilder: (context, state) {
-            final id = state.pathParameters['id'] ?? '';
-            return _buildCube3DTransition(
-              state: state,
-              child: ProfileScreen(id: id),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/booking',
-          pageBuilder: (context, state) => _buildCube3DTransition(
-            state: state,
-            child: const BookingScreen(),
-          ),
-        ),
-        GoRoute(
-          path: '/me',
-          pageBuilder: (context, state) => _buildCube3DTransition(
-            state: state,
-            child: const MyProfileScreen(),
-          ),
-        ),
-      ],
+    // Main App with bottom navigation
+    GoRoute(
+      path: '/app',
+      pageBuilder: (context, state) => _buildFadeScaleTransition(
+        state: state,
+        child: const MainNavigationScreen(),
+      ),
+    ),
+    
+    // Profile detail page
+    GoRoute(
+      path: '/profile/:id',
+      pageBuilder: (context, state) {
+        final id = state.pathParameters['id'] ?? '';
+        return _buildCube3DTransition(
+          state: state,
+          child: ProfileScreen(id: id),
+        );
+      },
+    ),
+    
+    // Search page
+    GoRoute(
+      path: '/search',
+      pageBuilder: (context, state) {
+        return _buildFadeScaleTransition(
+          state: state,
+          child: const SearchScreen(),
+        );
+      },
     ),
   ],
 );

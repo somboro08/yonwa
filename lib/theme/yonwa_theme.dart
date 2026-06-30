@@ -5,37 +5,40 @@ import 'package:flutter/material.dart';
 // ─────────────────────────────────────────────
 
 class YonwaColors {
-  // Palette Yonwa - Patrimoine Béninois
-  static const primary50  = Color(0xFFFBEBE8);
-  static const primary100 = Color(0xFFF7D8D1);
-  static const primary200 = Color.fromARGB(255, 169, 238, 163);
-  static const primary300 = Color.fromARGB(255, 117, 230, 134);
-  static const primary400 = Color.fromARGB(255, 50, 184, 73);
-  static const primary500 = Color.fromARGB(255, 129, 226, 91); // Terre cuite (Brand color)
-  static const primary600 = Color.fromARGB(255, 73, 181, 93);
-  static const primary700 = Color(0xFF884437);
-
-  // Secondary - Orange coucher de soleil
-  static const secondary  = Color(0xFFFF8C42);
+  // Clean Modern Palette - Airbnb/Booking Style
+  // Primary - Dark Blue
+  static const primary50  = Color(0xFFE8EAF0);
+  static const primary100 = Color(0xFFC5C9D6);
+  static const primary200 = Color(0xFF9BA1B5);
+  static const primary300 = Color(0xFF717994);
+  static const primary400 = Color(0xFF4A5173);
+  static const primary500 = Color(0xFF1A1A2E); // Dark Blue (Brand color)
+  static const primary600 = Color(0xFF151525);
+  static const primary700 = Color(0xFF10101C);
   
-  // Background - Beige sable
-  static const background = Color(0xFFF5E6CA);
+  // Secondary - Yellow/Gold Light
+  static const secondary  = Color(0xFFC9A84C);
+  static const secondaryLight = Color(0xFFE5D4A1);
   
-  // Accent - Vert nature
-  static const accent     = Color(0xFF6B8E23);
+  // Background - Clean White
+  static const background = Color(0xFFFAFAFA);
+  static const surface = Color(0xFFFFFFFF);
+  
+  // Accent - Warm Yellow
+  static const accent     = Color(0xFFFFD93D);
 
-  // Neutral - Warm grays
+  // Neutral - Cool grays for clean look
   static const neutral0   = Color(0xFFFFFFFF);
-  static const neutral50  = Color(0xFFFAF9F7);
-  static const neutral100 = Color(0xFFF2F0EC);
-  static const neutral200 = Color(0xFFE5E2DC);
-  static const neutral300 = Color(0xFFCCC8BF);
-  static const neutral400 = Color(0xFF9E9A92);
-  static const neutral500 = Color(0xFF706C65);
-  static const neutral600 = Color(0xFF4A4740);
-  static const neutral700 = Color(0xFF2E2B25);
-  static const neutral800 = Color(0xFF1E1C18);
-  static const neutral900 = Color(0xFF12100D);
+  static const neutral50  = Color(0xFFFAFAFA);
+  static const neutral100 = Color(0xFFF5F5F5);
+  static const neutral200 = Color(0xFFEEEEF2);
+  static const neutral300 = Color(0xFFE0E0E0);
+  static const neutral400 = Color(0xFFA0A0A0);
+  static const neutral500 = Color(0xFF707070);
+  static const neutral600 = Color(0xFF505050);
+  static const neutral700 = Color(0xFF303030);
+  static const neutral800 = Color(0xFF1A1A1A);
+  static const neutral900 = Color(0xFF0D0D0D);
 
   // Semantic
   static const success    = Color(0xFF22C55E);

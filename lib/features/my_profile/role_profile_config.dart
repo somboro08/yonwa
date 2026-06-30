@@ -53,6 +53,8 @@ enum ProfileTab {
   catalog,
   services,
   experiences,
+  appointments,
+  adventureHistory,
   publications,
   reviews,
   about,
@@ -82,6 +84,10 @@ class RoleProfileConfig {
         return 'Services';
       case ProfileTab.experiences:
         return 'Expériences';
+      case ProfileTab.appointments:
+        return 'Rendez-vous';
+      case ProfileTab.adventureHistory:
+        return 'Historique';
       case ProfileTab.publications:
         return 'Publications';
       case ProfileTab.reviews:
@@ -258,6 +264,8 @@ class RoleProfileConfig {
           tabs: [
             ProfileTab.experiences,
             ProfileTab.services,
+            ProfileTab.appointments,
+            ProfileTab.adventureHistory,
             ProfileTab.publications,
             ProfileTab.reviews,
             ProfileTab.about,

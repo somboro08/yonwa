@@ -132,7 +132,7 @@ class _SplashState extends State<_Splash> with SingleTickerProviderStateMixin {
       } else if (!questionnaireDone) {
         Navigator.of(context).pushReplacementNamed('/questionnaire');
       } else {
-        Navigator.of(context).pushReplacementNamed('/home');
+        Navigator.of(context).pushReplacementNamed('/app');
       }
     } catch (e) {
       debugPrint('Error during navigation: $e');

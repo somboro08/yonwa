@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import '../../core/responsive/breakpoints.dart';
 import '../../shared/widgets/floating_navbar.dart';
+import '../../theme/yonwa_theme.dart';
 
 class BookingScreen extends StatelessWidget {
   const BookingScreen({super.key});
@@ -35,7 +36,7 @@ class BookingScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: YonwaColors.background,
       body: CustomScrollView(
         slivers: [
           // Navbar floating (mobile only)
@@ -54,7 +55,7 @@ class BookingScreen extends StatelessWidget {
                     style: GoogleFonts.outfit(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF0D0D0D),
+                      color: YonwaColors.neutral900,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -62,7 +63,7 @@ class BookingScreen extends StatelessWidget {
                     'Retrouvez et gérez vos ateliers et circuits programmés.',
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: const Color(0xFF6B6B7A),
+                      color: YonwaColors.neutral500,
                     ),
                   ),
                 ],
@@ -82,12 +83,12 @@ class BookingScreen extends StatelessWidget {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: YonwaColors.surface,
                       borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: const Color(0xFFEEEEF2), width: 1),
+                      border: Border.all(color: YonwaColors.neutral200, width: 1),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: YonwaColors.neutral900.withOpacity(0.04),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
@@ -128,7 +129,7 @@ class BookingScreen extends StatelessWidget {
                                           style: GoogleFonts.outfit(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
-                                            color: const Color(0xFF0D0D0D),
+                                            color: YonwaColors.neutral900,
                                           ),
                                         ),
                                       ),
@@ -154,13 +155,13 @@ class BookingScreen extends StatelessWidget {
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  Text(
-                                    'Hôte : ${booking['host']}',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 12,
-                                      color: const Color(0xFF6B6B7A),
+                                    Text(
+                                      'Hôte : ${booking['host']}',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: YonwaColors.neutral500,
+                                      ),
                                     ),
-                                  ),
                                   const SizedBox(height: 12),
                                   
                                   // Date & Time Row
@@ -168,33 +169,33 @@ class BookingScreen extends StatelessWidget {
                                     children: [
                                       const HugeIcon(
                                         icon: HugeIcons.strokeRoundedCalendar03,
-                                        color: Color(0xFF6B6B7A),
+                                        color: YonwaColors.neutral500,
                                         size: 14,
                                       ),
                                       const SizedBox(width: 6),
-                                      Text(
-                                        booking['date']!,
-                                        style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          color: const Color(0xFF0D0D0D),
-                                          fontWeight: FontWeight.w500,
+                                        Text(
+                                          booking['date']!,
+                                          style: GoogleFonts.inter(
+                                            fontSize: 12,
+                                            color: YonwaColors.neutral800,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
                                       const SizedBox(width: 16),
                                       const HugeIcon(
                                         icon: HugeIcons.strokeRoundedClock01,
-                                        color: Color(0xFF6B6B7A),
+                                        color: YonwaColors.neutral500,
                                         size: 14,
                                       ),
                                       const SizedBox(width: 6),
-                                      Text(
-                                        booking['time']!,
-                                        style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          color: const Color(0xFF0D0D0D),
-                                          fontWeight: FontWeight.w500,
+                                        Text(
+                                          booking['time']!,
+                                          style: GoogleFonts.inter(
+                                            fontSize: 12,
+                                            color: YonwaColors.neutral800,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
                                     ],
                                   ),
                                   const SizedBox(height: 8),
@@ -207,17 +208,17 @@ class BookingScreen extends StatelessWidget {
                                         children: [
                                           const HugeIcon(
                                             icon: HugeIcons.strokeRoundedCompass,
-                                            color: Color(0xFF6B6B7A),
+                                            color: YonwaColors.neutral500,
                                             size: 14,
                                           ),
                                           const SizedBox(width: 6),
-                                          Text(
-                                            booking['location']!,
-                                            style: GoogleFonts.inter(
-                                              fontSize: 11,
-                                              color: const Color(0xFF6B6B7A),
+                                            Text(
+                                              booking['location']!,
+                                              style: GoogleFonts.inter(
+                                                fontSize: 11,
+                                                color: YonwaColors.neutral500,
+                                              ),
                                             ),
-                                          ),
                                         ],
                                       ),
                                       Text(
@@ -225,7 +226,7 @@ class BookingScreen extends StatelessWidget {
                                         style: GoogleFonts.outfit(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
-                                          color: const Color(0xFF1A1A2E),
+                                          color: YonwaColors.primary500,
                                         ),
                                       ),
                                     ],

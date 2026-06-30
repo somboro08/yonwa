@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen>
       'articles': 120,
       'servicesCount': 0,
       'isVerified': false,
-      'telephone': '+229 95 66 77 88',
+      'telephone': '+229 01 95 66 77 88',
     },
     {
       'nom': 'Yao Mensah',
@@ -965,7 +965,7 @@ class _HomeScreenState extends State<HomeScreen>
                         borderRadius: BorderRadius.circular(YonwaRadius.xl),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color.fromARGB(191, 0, 0, 0).withOpacity(0.15),
+                            color: Colors.black.withOpacity(0.15),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),

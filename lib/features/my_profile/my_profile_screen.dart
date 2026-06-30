@@ -6,6 +6,7 @@ import '../../models/models.dart';
 import '../../shared/providers/user_provider.dart';
 import '../../shared/widgets/floating_navbar.dart';
 import '../../core/responsive/breakpoints.dart';
+import '../../theme/yonwa_theme.dart';
 import 'role_profile_config.dart';
 import 'widgets/profile_header.dart';
 import 'widgets/quick_actions_bar.dart';
@@ -16,6 +17,8 @@ import 'sections/products_section.dart';
 import 'sections/publications_section.dart';
 import 'sections/reviews_section.dart';
 import 'sections/services_section.dart';
+import 'sections/appointments_section.dart';
+import 'sections/adventure_history_section.dart';
 
 /// Profil "self" adaptatif : un seul écran, configuré par le rôle de l'utilisateur.
 class MyProfileScreen extends ConsumerStatefulWidget {
@@ -77,6 +80,10 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen>
         return const ServicesSection();
       case ProfileTab.experiences:
         return const ExperiencesSection();
+      case ProfileTab.appointments:
+        return const AppointmentsSection();
+      case ProfileTab.adventureHistory:
+        return const AdventureHistorySection();
       case ProfileTab.publications:
         return const PublicationsSection();
       case ProfileTab.reviews:
@@ -93,7 +100,7 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen>
     _syncTabController(user.role, config.tabs.length);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: YonwaColors.background,
       body: SafeArea(
         top: false,
         child: NestedScrollView(
@@ -159,7 +166,7 @@ class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: const Color(0xFFFAFAFA),
+      color: YonwaColors.background,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: TabBar(
         controller: controller,
@@ -219,32 +226,32 @@ class _RoleSwitcherSheet extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-            'Changer de profil',
-            style: GoogleFonts.outfit(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF0D0D0D),
-            ),
-          ),
+                  Text(
+                    'Changer de profil',
+                    style: GoogleFonts.outfit(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: YonwaColors.neutral900,
+                    ),
+                  ),
           const SizedBox(height: 4),
-          Text(
-            'L\'expérience s\'adapte au rôle choisi.',
-            style: GoogleFonts.inter(fontSize: 13, color: const Color(0xFF6B6B7A)),
-          ),
+                  Text(
+                    'L\'expérience s\'adapte au rôle choisi.',
+                    style: GoogleFonts.inter(fontSize: 13, color: YonwaColors.neutral500),
+                  ),
           const SizedBox(height: 16),
           ...UserRole.values.map((role) {
             final isSelected = role == currentRole;
             final color = RoleProfileConfig.roleColor(role);
             return Container(
               margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(
-                color: isSelected ? color.withOpacity(0.08) : Colors.transparent,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: isSelected ? color.withOpacity(0.4) : const Color(0xFFEEEEF2),
-                ),
-              ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? color.withOpacity(0.08) : Colors.transparent,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: isSelected ? color.withOpacity(0.4) : YonwaColors.neutral200,
+                    ),
+                  ),
               child: ListTile(
                 onTap: () => onSelect(role),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -266,12 +273,12 @@ class _RoleSwitcherSheet extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF0D0D0D),
+                    color: YonwaColors.neutral900,
                   ),
                 ),
                 subtitle: Text(
                   RoleProfileConfig.roleTagline(role),
-                  style: GoogleFonts.inter(fontSize: 11, color: const Color(0xFF6B6B7A)),
+                  style: GoogleFonts.inter(fontSize: 11, color: YonwaColors.neutral500),
                 ),
                 trailing: isSelected
                     ? HugeIcon(

@@ -7,6 +7,7 @@ import '../../mock/mock_data.dart';
 import '../../shared/widgets/floating_navbar.dart';
 import '../../shared/widgets/responsive_card_grid.dart';
 import '../../shared/widgets/yonwa_card.dart';
+import '../../theme/yonwa_theme.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
@@ -19,7 +20,7 @@ class ExploreScreen extends StatelessWidget {
     final actors = MockData.actors;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: YonwaColors.background,
       body: CustomScrollView(
         slivers: [
           // Navbar floating (mobile only)
@@ -38,7 +39,7 @@ class ExploreScreen extends StatelessWidget {
                     style: GoogleFonts.outfit(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF0D0D0D),
+                      color: YonwaColors.neutral900,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -46,7 +47,7 @@ class ExploreScreen extends StatelessWidget {
                     'Explorez la diversité des artisans, guides et revendeurs locaux du Bénin.',
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: const Color(0xFF6B6B7A),
+                      color: YonwaColors.neutral500,
                     ),
                   ),
                 ],
@@ -65,27 +66,27 @@ class ExploreScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final cat = MockData.searchCategories[index];
                   final isSelected = index == 0;
-                  return Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: isSelected ? const Color(0xFF1A1A2E) : Colors.white,
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(
-                        color: isSelected ? Colors.transparent : const Color(0xFFEEEEF2),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        cat,
-                        style: GoogleFonts.inter(
-                          color: isSelected ? Colors.white : const Color(0xFF6B6B7A),
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                          fontSize: 13,
+                    return Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: isSelected ? YonwaColors.primary500 : YonwaColors.surface,
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                          color: isSelected ? Colors.transparent : YonwaColors.neutral200,
                         ),
                       ),
-                    ),
-                  );
+                      child: Center(
+                        child: Text(
+                          cat,
+                          style: GoogleFonts.inter(
+                            color: isSelected ? Colors.white : YonwaColors.neutral500,
+                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    );
                 },
               ),
             ),

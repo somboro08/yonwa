@@ -292,7 +292,7 @@ class _OnboardingQuestionnaireState extends State<OnboardingQuestionnaire> {
     await prefs.setBool('questionnaire_done', true);
 
     if (mounted) {
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/app');
     }
   }
 

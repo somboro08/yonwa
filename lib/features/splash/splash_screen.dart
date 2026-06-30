@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../theme/yonwa_theme.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -42,10 +43,10 @@ class _SplashScreenState extends State<SplashScreen>
         } else if (!questionnaireDone) {
           context.go('/questionnaire');
         } else {
-          context.go('/home');
+          context.go('/app');
         }
       } catch (e) {
-        context.go('/onboarding');
+        context.go('/app');
       }
     });
   }
@@ -61,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: YonwaColors.background,
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -82,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen>
                       style: GoogleFonts.poppins(
                         fontSize: 58,
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFF0D0D0D),
+                        color: YonwaColors.primary500,
                         letterSpacing: 4,
                       ),
                     ),

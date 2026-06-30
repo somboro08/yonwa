@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../theme/yonwa_theme.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -52,7 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: YonwaColors.background,
       body: SafeArea(
         child: Stack(
           children: [
@@ -108,7 +109,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               style: GoogleFonts.outfit(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w600,
-                                color: const Color(0xFF0D0D0D),
+                                color: YonwaColors.neutral900,
                               ),
                             ),
                             const SizedBox(height: 12),
@@ -117,7 +118,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.inter(
                                 fontSize: 14,
-                                color: const Color(0xFF6B6B7A),
+                                color: YonwaColors.neutral500,
                                 height: 1.5,
                               ),
                             ),
@@ -141,7 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
-                    color: const Color(0xFFC9A84C),
+                    color: YonwaColors.secondary,
                   ),
                 ),
               ),
@@ -160,8 +161,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     controller: _pageController,
                     count: _slides.length,
                     effect: const ExpandingDotsEffect(
-                      activeDotColor: Color(0xFFC9A84C),
-                      dotColor: Color(0xFFEEEEF2),
+                      activeDotColor: YonwaColors.secondary,
+                      dotColor: YonwaColors.neutral200,
                       dotHeight: 8,
                       dotWidth: 8,
                       expansionFactor: 3,
@@ -178,14 +179,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            color: const Color(0xFF1A1A2E),
+                            color: YonwaColors.primary500,
                           ),
                         ),
                         const SizedBox(width: 4),
                         const Icon(
                           Icons.arrow_forward_rounded,
                           size: 16,
-                          color: Color(0xFF1A1A2E),
+                          color: YonwaColors.primary500,
                         ),
                       ],
                     ),
