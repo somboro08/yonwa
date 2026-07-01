@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../responsive/breakpoints.dart';
 import '../responsive/responsive_layout.dart';
 import '../../shared/widgets/profile_avatar.dart';
 import 'web_sidebar.dart';

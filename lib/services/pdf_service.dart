@@ -131,7 +131,7 @@ class PdfService {
                   style: pw.TextStyle(font: _poppinsBold, fontSize: 18, color: PdfYonwaColors.neutral800)),
               pw.SizedBox(height: 10),
               _buildInfoRow('Prix par nuit', '${nightlyPrice.toInt()} FCFA', _poppinsRegular, _poppinsBold),
-              _buildInfoRow('Sous-total (${nights} nuits)', '${subtotal.toInt()} FCFA', _poppinsRegular, _poppinsBold),
+              _buildInfoRow('Sous-total ($nights nuits)', '${subtotal.toInt()} FCFA', _poppinsRegular, _poppinsBold),
               _buildInfoRow('Frais de service Yonwa', '${serviceFee.toInt()} FCFA', _poppinsRegular, _poppinsBold),
               pw.Divider(color: PdfYonwaColors.neutral200),
               _buildInfoRow('Total Payé', '${total.toInt()} FCFA', _poppinsRegular, _poppinsBold, isTotal: true, icon: '💰'),

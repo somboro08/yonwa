@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hugeicons/hugeicons.dart';
-import '../../core/responsive/breakpoints.dart';
 import '../../mock/mock_data.dart';
-import '../../shared/widgets/floating_navbar.dart';
+import '../../models/models.dart';
+import '../../shared/providers/auth_provider.dart';
 import '../../theme/yonwa_theme.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -14,121 +14,43 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      backgroundColor: YonwaColors.background,
-      body: Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              // Carousel 30% hauteur
-              const SliverToBoxAdapter(child: HeroCarousel()),
-              
-              // Header flottant sans background et hauteur réduite
-              const SliverToBoxAdapter(child: FloatingHeader()),
-              
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
-              
-              // Bouton recherche
-              const SliverToBoxAdapter(child: SearchButton()),
-              
-              const SliverToBoxAdapter(child: SizedBox(height: 24)),
-              
-              // Sections de profils par catégorie
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    ProfileSection(
-                      title: 'Artisans pour vous',
-                      role: 'artisan',
-                    ),
-                    SizedBox(height: 24),
-                    ProfileSection(
-                      title: 'Guides touristiques',
-                      role: 'guide',
-                    ),
-                    SizedBox(height: 24),
-                    ProfileSection(
-                      title: 'Revendeurs',
-                      role: 'revendeur',
-                    ),
-                    SizedBox(height: 24),
-                  ],
-                ),
-              ),
-              
-              // Section Produits & Services
-              const SliverToBoxAdapter(child: ProductsServicesSection()),
-              
-              const SliverToBoxAdapter(child: SizedBox(height: 100)),
+    return CustomScrollView(
+      slivers: [
+        // Header principal de l'accueil
+        const SliverToBoxAdapter(child: HomeHeader()),
+
+        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+
+        // Carousel 30% hauteur
+        const SliverToBoxAdapter(child: HeroCarousel()),
+
+        const SliverToBoxAdapter(child: SizedBox(height: 16)),
+
+        // Bouton recherche
+        const SliverToBoxAdapter(child: SearchButton()),
+
+        const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+        // Sections de profils par catégorie
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              ProfileSection(title: 'Artisans', role: 'artisan'),
+              SizedBox(height: 24),
+              ProfileSection(title: 'Concepteurs', role: 'concepteur'),
+              SizedBox(height: 24),
+              ProfileSection(title: 'Guides', role: 'guide'),
+              SizedBox(height: 24),
             ],
           ),
-          
-          // Navbar flottante avec fond blanc
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.white,
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top,
-                left: 16,
-                right: 16,
-                bottom: 8,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Menu hamburger
-                  IconButton(
-                    onPressed: () => Scaffold.of(context).openDrawer(),
-                    icon: const HugeIcon(
-                      icon: HugeIcons.strokeRoundedMenu01,
-                      color: YonwaColors.neutral900,
-                      size: 24,
-                    ),
-                  ),
-                  
-                  // Titre Yonwa
-                  Text(
-                    'Yonwa',
-                    style: GoogleFonts.outfit(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: YonwaColors.primary500,
-                    ),
-                  ),
-                  
-                  // Bouton S'inscrire
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: YonwaColors.primary500,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      'S\'inscrire',
-                      style: GoogleFonts.inter(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+
+        // Section Produits & Services
+        const SliverToBoxAdapter(child: ProductsServicesSection()),
+
+        const SliverToBoxAdapter(child: SizedBox(height: 100)),
+      ],
     );
   }
 }
@@ -235,7 +157,7 @@ class _HeroCarouselState extends State<HeroCarousel> {
               );
             },
           ),
-          
+
           // Indicateurs
           Positioned(
             bottom: 16,
@@ -252,7 +174,7 @@ class _HeroCarouselState extends State<HeroCarousel> {
                     shape: BoxShape.circle,
                     color: _currentPage == index
                         ? Colors.white
-                        : Colors.white.withOpacity(0.5),
+                        : Colors.white.withValues(alpha: 0.5),
                   ),
                 );
               }),
@@ -264,80 +186,104 @@ class _HeroCarouselState extends State<HeroCarousel> {
   }
 }
 
-// ── HEADER FLOTTANT SANS BACKGROUND ────────────────────────────────────────
-class FloatingHeader extends StatelessWidget {
-  const FloatingHeader({super.key});
+// ── HEADER PRINCIPAL DE L'ACCUEIL ────────────────────────────────────────
+class HomeHeader extends ConsumerWidget {
+  const HomeHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-      height: 40,
-      child: Row(
-        children: [
-          // Avatar
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: YonwaColors.primary500, width: 2),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.watch(authStateProvider);
+    final photoUrl =
+      currentUser?.userMetadata?['avatar_url'] as String? ??
+      currentUser?.userMetadata?['photo_url'] as String?;
+    final title = currentUser?.email != null
+        ? 'Bonjour, ${currentUser!.email}'
+        : 'Bonjour, invité';
+    final subtitle = currentUser != null
+        ? 'Découvrez les trésors du Bénin'
+        : 'Connectez-vous pour sauvegarder vos favoris et réservations';
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: YonwaColors.neutral200),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
-            child: const CircleAvatar(
-              backgroundImage: NetworkImage('https://i0.wp.com/site-touristique-du-benin.com/wp-content/uploads/2023/08/AAA-1.jpg'),
+          ],
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 22,
+              backgroundColor: YonwaColors.primary50,
+              backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+              child: photoUrl == null
+                  ? const Icon(Icons.person, color: YonwaColors.primary500)
+                  : null,
             ),
-          ),
-          const SizedBox(width: 8),
-          
-          // Texte
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.outfit(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: YonwaColors.neutral900,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: YonwaColors.neutral500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            Row(
               children: [
-                Text(
-                  'Bonjour, Gaspard',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () => context.push('/notifications'),
+                  icon: const HugeIcon(
+                    icon: HugeIcons.strokeRoundedNotification01,
+                    color: YonwaColors.neutral700,
+                    size: 20,
                   ),
                 ),
-                Text(
-                  'Découvrez le Bénin',
-                  style: GoogleFonts.inter(
-                    fontSize: 10,
-                    color: Colors.white.withOpacity(0.8),
+                const SizedBox(width: 2),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () => context.push('/messages'),
+                  icon: const HugeIcon(
+                    icon: HugeIcons.strokeRoundedMessage01,
+                    color: YonwaColors.primary500,
+                    size: 20,
                   ),
                 ),
               ],
             ),
-          ),
-          
-          // Notification
-          Stack(
-            children: [
-              const HugeIcon(
-                icon: HugeIcons.strokeRoundedNotification01,
-                color: Colors.white,
-                size: 20,
-              ),
-              Positioned(
-                right: 0,
-                top: 0,
-                child: Container(
-                  width: 6,
-                  height: 6,
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -391,11 +337,7 @@ class ProfileSection extends StatelessWidget {
   final String title;
   final String role;
 
-  const ProfileSection({
-    super.key,
-    required this.title,
-    required this.role,
-  });
+  const ProfileSection({super.key, required this.title, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -412,30 +354,39 @@ class ProfileSection extends StatelessWidget {
               Text(
                 '$title (${profiles.length})',
                 style: GoogleFonts.outfit(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: YonwaColors.neutral900,
                 ),
               ),
-              TextButton(
-                onPressed: () {},
-                child: Text(
+              TextButton.icon(
+                onPressed: () => context.push('/profiles/$role'),
+                icon: const Icon(
+                  Icons.add,
+                  size: 18,
+                  color: YonwaColors.primary500,
+                ),
+                label: Text(
                   'Voir tout',
                   style: GoogleFonts.inter(
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: YonwaColors.primary500,
                   ),
+                ),
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: const Size(0, 30),
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 12),
-        
+        const SizedBox(height: 8),
+
         // Scroll horizontal
         SizedBox(
-          height: 190,
+          height: 200, // Hauteur fixe pour les cartes profils
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -443,7 +394,7 @@ class ProfileSection extends StatelessWidget {
             itemBuilder: (context, index) {
               final profile = profiles[index];
               return Container(
-                width: MediaQuery.of(context).size.width * 0.32,
+                width: 140, // Largeur fixe pour les cartes profils
                 margin: EdgeInsets.only(
                   right: index < profiles.length - 1 ? 10 : 0,
                 ),
@@ -465,72 +416,25 @@ class ProfileSection extends StatelessWidget {
   }
 
   List<Map<String, dynamic>> _getProfilesByRole(String role) {
-    // Créer des profils fictifs pour chaque catégorie
-    final List<Map<String, dynamic>> mockProfiles = [];
-    
-    // Noms de base pour chaque catégorie
-    final List<Map<String, String>> artisans = [
-      {'nom': 'Koffi Mensah', 'ville': 'Cotonou', 'roleDisplay': 'Artisan Sculpteur'},
-      {'nom': 'Awa Dossou', 'ville': 'Porto-Novo', 'roleDisplay': 'Artisan Tisserande'},
-      {'nom': 'Souleymane Diallo', 'ville': 'Parakou', 'roleDisplay': 'Artisan Bijoutier'},
-      {'nom': 'Fatou Traoré', 'ville': 'Abomey', 'roleDisplay': 'Artisan Potière'},
-      {'nom': 'Ibrahim Kone', 'ville': 'Natitingou', 'roleDisplay': 'Artisan Forgeron'},
-    ];
-    
-    final List<Map<String, String>> guides = [
-      {'nom': 'Alain Kouassi', 'ville': 'Ganvié', 'roleDisplay': 'Guide Touristique'},
-      {'nom': 'Sandra Fagbohun', 'ville': 'Ouidah', 'roleDisplay': 'Guide Culturel'},
-      {'nom': 'Marc Zinsou', 'ville': 'Abomey', 'roleDisplay': 'Guide Historique'},
-      {'nom': 'Léa Akindès', 'ville': 'Cotonou', 'roleDisplay': 'Guide Nature'},
-      {'nom': 'David Tokpah', 'ville': 'Porto-Novo', 'roleDisplay': 'Guide Gastronomique'},
-    ];
-    
-    final List<Map<String, String>> revendeurs = [
-      {'nom': 'Jean-Marie Ahouanvoébla', 'ville': 'Cotonou', 'roleDisplay': 'Revendeur d\'Art'},
-      {'nom': 'Rosalie Hountondji', 'ville': 'Porto-Novo', 'roleDisplay': 'Revendeuse de Tissus'},
-      {'nom': 'Moussa Gassama', 'ville': 'Parakou', 'roleDisplay': 'Revendeur de Produits'},
-      {'nom': 'Yolande Dossou', 'ville': 'Abomey', 'roleDisplay': 'Revendeuse d\'Objets'},
-      {'nom': 'Rachid Adégbé', 'ville': 'Natitingou', 'roleDisplay': 'Revendeur d\'Artisanat'},
-    ];
+    final actors = MockData.actors;
 
-    final List<Map<String, dynamic>> selectedProfiles;
-    
     switch (role) {
       case 'artisan':
-        selectedProfiles = artisans.map((a) => {
-          ...a,
-          'id': 'artisan_${artisans.indexOf(a)}',
-          'photoUrl': 'assets/images/hero1.jpg',
-          'coverImage': 'assets/images/hero2.jpg',
-          'rating': (3.5 + (artisans.indexOf(a) * 0.3)).toStringAsFixed(1),
-          'role': 'artisan',
+        return actors.where((actor) {
+          return actor['role'] == UserRole.artisan ||
+              actor['role'] == UserRole.artisanRevendeur;
         }).toList();
-        break;
+      case 'concepteur':
+        return actors
+            .where((actor) => actor['role'] == UserRole.artisanConcepteur)
+            .toList();
       case 'guide':
-        selectedProfiles = guides.map((a) => {
-          ...a,
-          'id': 'guide_${guides.indexOf(a)}',
-          'photoUrl': 'assets/images/hero1.jpg',
-          'coverImage': 'assets/images/hero2.jpg',
-          'rating': (4.0 + (guides.indexOf(a) * 0.2)).toStringAsFixed(1),
-          'role': 'guideTouristique',
-        }).toList();
-        break;
-      case 'revendeur':
-        selectedProfiles = revendeurs.map((a) => {
-          ...a,
-          'id': 'revendeur_${revendeurs.indexOf(a)}',
-          'photoUrl': 'assets/images/hero1.jpg',
-          'coverImage': 'assets/images/hero2.jpg',
-          'rating': (3.8 + (revendeurs.indexOf(a) * 0.2)).toStringAsFixed(1),
-          'role': 'revendeur',
-        }).toList();
-        break;
+        return actors
+            .where((actor) => actor['role'] == UserRole.guideTouristique)
+            .toList();
       default:
-        return [];
+        return actors;
     }
-    
-    return selectedProfiles;
   }
 }
 
@@ -562,8 +466,15 @@ class ProfileCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
           border: Border.all(color: YonwaColors.neutral200),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -584,17 +495,18 @@ class ProfileCard extends StatelessWidget {
                     child: const Icon(
                       Icons.image,
                       color: YonwaColors.neutral400,
+                      size: 24,
                     ),
                   ),
                 ),
               ),
             ),
-            
+
             // Image de profil + infos
             Expanded(
               flex: 3,
               child: Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -602,14 +514,14 @@ class ProfileCard extends StatelessWidget {
                     // Avatar
                     Center(
                       child: Container(
-                        width: 40,
-                        height: 40,
+                        width: 36,
+                        height: 36,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.white, width: 2),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 4,
                               offset: const Offset(0, 1),
                             ),
@@ -623,8 +535,8 @@ class ProfileCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    
+                    const SizedBox(height: 3),
+
                     // Nom
                     Text(
                       name,
@@ -636,29 +548,30 @@ class ProfileCard extends StatelessWidget {
                         color: YonwaColors.neutral900,
                       ),
                     ),
-                    const SizedBox(height: 1),
-                    
+
                     // Rôle
                     Text(
                       role,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
-                        fontSize: 9,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
                         color: YonwaColors.neutral600,
                       ),
                     ),
+
                     const SizedBox(height: 2),
-                    
+
                     // Rating + Location
                     Row(
                       children: [
                         const HugeIcon(
                           icon: HugeIcons.strokeRoundedStar,
-                          color: Color(0xFFC9A84C),
+                          color: YonwaColors.secondary,
                           size: 10,
                         ),
-                        const SizedBox(width: 1),
+                        const SizedBox(width: 2),
                         Text(
                           rating,
                           style: GoogleFonts.inter(
@@ -710,13 +623,13 @@ class ProductsServicesSection extends ConsumerWidget {
               Text(
                 'Produits & Services',
                 style: GoogleFonts.outfit(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: YonwaColors.neutral900,
                 ),
               ),
-              const SizedBox(height: 12),
-              
+              const SizedBox(height: 8),
+
               // Onglets filtre
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -724,23 +637,35 @@ class ProductsServicesSection extends ConsumerWidget {
                   children: [
                     _FilterChip(label: 'Tout', isSelected: true, onTap: () {}),
                     const SizedBox(width: 8),
-                    _FilterChip(label: 'Produits', isSelected: false, onTap: () {}),
+                    _FilterChip(
+                      label: 'Produits',
+                      isSelected: false,
+                      onTap: () {},
+                    ),
                     const SizedBox(width: 8),
-                    _FilterChip(label: 'Services', isSelected: false, onTap: () {}),
+                    _FilterChip(
+                      label: 'Services',
+                      isSelected: false,
+                      onTap: () {},
+                    ),
                     const SizedBox(width: 8),
-                    _FilterChip(label: 'Expériences', isSelected: false, onTap: () {}),
+                    _FilterChip(
+                      label: 'Expériences',
+                      isSelected: false,
+                      onTap: () {},
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         ),
-        
-        const SizedBox(height: 16),
-        
-        // Liste horizontale
+
+        const SizedBox(height: 12),
+
+        // Liste horizontale - même hauteur que les profils
         SizedBox(
-          height: 280,
+          height: 200, // Même hauteur que les cartes profils
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -748,29 +673,70 @@ class ProductsServicesSection extends ConsumerWidget {
             itemBuilder: (context, index) {
               // Produits fictifs
               final List<Map<String, String>> mockProducts = [
-                {'title': 'Poterie artisanale', 'price': '15 000 FCFA', 'category': 'Artisanat'},
-                {'title': 'Visite guidée Ganvié', 'price': '25 000 FCFA', 'category': 'Tourisme'},
-                {'title': 'Tissu Wax premium', 'price': '35 000 FCFA', 'category': 'Textile'},
-                {'title': 'Cours de cuisine béninoise', 'price': '20 000 FCFA', 'category': 'Cuisine'},
-                {'title': 'Statue en bronze', 'price': '50 000 FCFA', 'category': 'Art'},
-                {'title': 'Excursion Abomey', 'price': '30 000 FCFA', 'category': 'Tourisme'},
-                {'title': 'Pagne traditionnel', 'price': '12 000 FCFA', 'category': 'Textile'},
-                {'title': 'Atelier tissage', 'price': '18 000 FCFA', 'category': 'Artisanat'},
-                {'title': 'Découverte Ouidah', 'price': '22 000 FCFA', 'category': 'Tourisme'},
-                {'title': 'Bijoux en perles', 'price': '8 000 FCFA', 'category': 'Artisanat'},
+                {
+                  'title': 'Poterie artisanale',
+                  'price': '15 000 FCFA',
+                  'category': 'Artisanat',
+                },
+                {
+                  'title': 'Visite guidée Ganvié',
+                  'price': '25 000 FCFA',
+                  'category': 'Tourisme',
+                },
+                {
+                  'title': 'Tissu Wax premium',
+                  'price': '35 000 FCFA',
+                  'category': 'Textile',
+                },
+                {
+                  'title': 'Cours de cuisine',
+                  'price': '20 000 FCFA',
+                  'category': 'Cuisine',
+                },
+                {
+                  'title': 'Statue en bronze',
+                  'price': '50 000 FCFA',
+                  'category': 'Art',
+                },
+                {
+                  'title': 'Excursion Abomey',
+                  'price': '30 000 FCFA',
+                  'category': 'Tourisme',
+                },
+                {
+                  'title': 'Pagne traditionnel',
+                  'price': '12 000 FCFA',
+                  'category': 'Textile',
+                },
+                {
+                  'title': 'Atelier tissage',
+                  'price': '18 000 FCFA',
+                  'category': 'Artisanat',
+                },
+                {
+                  'title': 'Découverte Ouidah',
+                  'price': '22 000 FCFA',
+                  'category': 'Tourisme',
+                },
+                {
+                  'title': 'Bijoux en perles',
+                  'price': '8 000 FCFA',
+                  'category': 'Artisanat',
+                },
               ];
-              
+
               final product = mockProducts[index % mockProducts.length];
               return Container(
-                width: (MediaQuery.of(context).size.width - 72) / 3,
-                margin: EdgeInsets.only(
-                  right: index < 9 ? 12 : 0,
-                ),
-                child: ProductCard(
-                  imageUrl: 'assets/images/hero1.jpg',
-                  title: product['title']!,
-                  price: product['price']!,
-                  category: product['category']!,
+                width: 140, // Même largeur que les cartes profils
+                margin: EdgeInsets.only(right: index < 9 ? 10 : 0),
+                child: GestureDetector(
+                  onTap: () => context.push('/product/${index + 1}'),
+                  child: ProductCard(
+                    imageUrl: 'assets/images/hero1.jpg',
+                    title: product['title']!,
+                    price: product['price']!,
+                    category: product['category']!,
+                  ),
                 ),
               );
             },
@@ -797,7 +763,7 @@ class _FilterChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected ? YonwaColors.primary500 : Colors.white,
           borderRadius: BorderRadius.circular(100),
@@ -808,7 +774,7 @@ class _FilterChip extends StatelessWidget {
         child: Text(
           label,
           style: GoogleFonts.inter(
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             color: isSelected ? Colors.white : YonwaColors.neutral700,
           ),
@@ -818,7 +784,7 @@ class _FilterChip extends StatelessWidget {
   }
 }
 
-// ── CARD PRODUIT ─────────────────────────────────────────────────────────────
+// ── CARD PRODUIT CORRIGÉE ────────────────────────────────────────────────────
 class ProductCard extends StatelessWidget {
   final String? imageUrl;
   final String title;
@@ -838,77 +804,91 @@ class ProductCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(color: YonwaColors.neutral200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image
+          // Image - même proportion que les profils
           Expanded(
-            flex: 5,
+            flex: 2,
             child: ClipRRect(
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16),
               ),
               child: Image.asset(
-                imageUrl ?? 'assets/images/hero.jpeg',
+                imageUrl ?? 'assets/images/hero1.jpg',
                 fit: BoxFit.cover,
-                width: 280,
+                width: double.infinity,
                 errorBuilder: (_, __, ___) => Container(
                   color: YonwaColors.neutral200,
                   child: const Icon(
                     Icons.image,
                     color: YonwaColors.neutral400,
+                    size: 24,
                   ),
                 ),
               ),
             ),
           ),
-          
-          // Infos
-          Flexible(
+
+          // Infos - même proportion que les profils
+          Expanded(
+            flex: 3,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Catégorie
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: YonwaColors.primary50,
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       category,
                       style: GoogleFonts.inter(
-                        fontSize: 10,
+                        fontSize: 8,
                         fontWeight: FontWeight.w500,
                         color: YonwaColors.primary500,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  
+                  const SizedBox(height: 3),
+
                   // Titre
                   Text(
                     title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.inter(
-                      fontSize: 12,
+                      fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: YonwaColors.neutral900,
+                      height: 1.2,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  
+                  const SizedBox(height: 2),
+
                   // Prix
                   Text(
                     price,
                     style: GoogleFonts.outfit(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: YonwaColors.secondary,
                     ),

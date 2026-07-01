@@ -68,7 +68,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
 
           // Dropdown pour les méthodes de paiement
           DropdownButtonFormField<PaymentMethod>(
-            value: _selectedMethod,
+            initialValue: _selectedMethod,
             decoration: InputDecoration(
               hintText: 'Sélectionner une méthode',
               prefixIcon: Icon(Icons.payment_rounded, color: YonwaColors.primary500),
@@ -97,7 +97,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
             items: const [
               DropdownMenuItem(
                 value: PaymentMethod.cinetpay,
-                child: const Text('Mobile Money (CinetPay)'),
+                child: Text('Mobile Money (CinetPay)'),
               ),
               DropdownMenuItem(
                 value: PaymentMethod.creditCard,

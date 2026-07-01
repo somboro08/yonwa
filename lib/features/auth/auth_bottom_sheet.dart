@@ -97,7 +97,7 @@ class AuthBottomSheet extends StatelessWidget {
           // Cancel
           OutlinedButton(
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: const Color(0xFFEEEEF2)),
+              side: const BorderSide(color: Color(0xFFEEEEF2)),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100),
               ),

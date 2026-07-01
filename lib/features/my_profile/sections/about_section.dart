@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/providers/user_provider.dart';
-import '../../../models/models.dart';
 import '../role_profile_config.dart';
 
 /// Onglet "À propos" — bio détaillée + coordonnées + "Mon Espace" (menu commun).

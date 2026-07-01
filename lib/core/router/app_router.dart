@@ -8,7 +8,9 @@ import '../../features/auth/auth_screen.dart';
 import '../../screens/main_navigation_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/search/search_screen.dart';
-import '../layout/app_shell.dart';
+import '../../features/notifications/notifications_screen.dart';
+import '../../features/products/product_detail_screen.dart';
+import '../../screens/chat/messages_inbox_screen.dart';
 
 CustomTransitionPage<void> _buildCube3DTransition({
   required GoRouterState state,
@@ -59,10 +61,7 @@ CustomTransitionPage<void> _buildFadeScaleTransition({
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const SplashScreen(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
     GoRoute(
       path: '/onboarding',
       pageBuilder: (context, state) => _buildFadeScaleTransition(
@@ -79,12 +78,10 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/auth',
-      pageBuilder: (context, state) => _buildFadeScaleTransition(
-        state: state,
-        child: const AuthScreen(),
-      ),
+      pageBuilder: (context, state) =>
+          _buildFadeScaleTransition(state: state, child: const AuthScreen()),
     ),
-    
+
     // Main App with bottom navigation
     GoRoute(
       path: '/app',
@@ -93,7 +90,7 @@ final GoRouter appRouter = GoRouter(
         child: const MainNavigationScreen(),
       ),
     ),
-    
+
     // Profile detail page
     GoRoute(
       path: '/profile/:id',
@@ -105,7 +102,7 @@ final GoRouter appRouter = GoRouter(
         );
       },
     ),
-    
+
     // Search page
     GoRoute(
       path: '/search',
@@ -113,6 +110,40 @@ final GoRouter appRouter = GoRouter(
         return _buildFadeScaleTransition(
           state: state,
           child: const SearchScreen(),
+        );
+      },
+    ),
+
+    // Notifications page
+    GoRoute(
+      path: '/notifications',
+      pageBuilder: (context, state) {
+        return _buildFadeScaleTransition(
+          state: state,
+          child: const NotificationsScreen(),
+        );
+      },
+    ),
+
+    // Product detail page
+    GoRoute(
+      path: '/product/:productId',
+      pageBuilder: (context, state) {
+        final productId = state.pathParameters['productId'] ?? '';
+        return _buildFadeScaleTransition(
+          state: state,
+          child: ProductDetailScreen(productId: productId),
+        );
+      },
+    ),
+
+    // Messages inbox
+    GoRoute(
+      path: '/messages',
+      pageBuilder: (context, state) {
+        return _buildFadeScaleTransition(
+          state: state,
+          child: const MessagesInboxScreen(),
         );
       },
     ),

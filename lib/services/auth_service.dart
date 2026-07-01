@@ -1,57 +1,88 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// lib/services/auth_service.dart
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import 'package:flutter/foundation.dart';
 
 class AuthService {
-  // Accès paresseux pour éviter le crash si Firebase n'est pas initialisé
-  FirebaseAuth get _auth {
-    try {
-      return FirebaseAuth.instance;
-    } catch (e) {
-      if (isMockMode) {
-        // On ignore l'erreur en mode mock
-        throw UnimplementedError('Firebase non disponible en mode simulation');
-      }
-      rethrow;
-    }
-  }
-  
-  // Identifiant Google
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: '272797549782-asb4ov7vib75dhi09uukr8riod1bk9c4.apps.googleusercontent.com',
-  );
-
   // --- CONFIGURATION DEV ---
-  // Mettez à 'true' pour passer l'erreur Google et accéder à l'app
-  bool get isMockMode => true; 
+  // Passez à 'false' dès que Supabase est configuré en production.
+  bool get isMockMode => true;
   // --------------------------
 
-  Stream<User?> get user => isMockMode ? Stream.value(null) : _auth.authStateChanges();
-  User? get currentUser => isMockMode ? null : _auth.currentUser;
+  Stream<supabase.User?> get user {
+    if (isMockMode) return Stream.value(null);
+    return supabase.Supabase.instance.client.auth.onAuthStateChange.map(
+      (event) => event.session?.user,
+    );
+  }
 
-  Future<dynamic> signInWithGoogle() async {
+  supabase.User? get currentUser {
+    if (isMockMode) return null;
+    return supabase.Supabase.instance.client.auth.currentUser;
+  }
+
+  Future<void> signInWithEmail(String email, String password) async {
     if (isMockMode) {
       debugPrint('--- MODE SIMULATION ACTIVÉ ---');
-      await Future.delayed(const Duration(seconds: 1)); // Simule un temps de chargement
-      debugPrint('Simulation : Connexion Google réussie (Mock)');
-      return "mock_user_credential"; 
+      await Future.delayed(const Duration(seconds: 1));
+      return;
     }
 
     try {
-      debugPrint('--- DEBUT GOOGLE SIGN-IN REEL ---');
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null;
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+      await supabase.Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
       );
-
-      return await _auth.signInWithCredential(credential);
     } catch (e) {
-      debugPrint('Erreur réelle Google : $e');
-      rethrow;
+      throw AuthException(e.toString());
+    }
+  }
+
+  Future<void> signUpWithEmail(String email, String password) async {
+    if (isMockMode) {
+      debugPrint('--- MODE SIMULATION ACTIVÉ ---');
+      await Future.delayed(const Duration(seconds: 1));
+      return;
+    }
+
+    try {
+      await supabase.Supabase.instance.client.auth.signUp(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      throw AuthException(e.toString());
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    if (isMockMode) {
+      debugPrint('--- MODE SIMULATION ACTIVÉ ---');
+      await Future.delayed(const Duration(seconds: 1));
+      return;
+    }
+
+    try {
+      await supabase.Supabase.instance.client.auth.signInWithOAuth(
+        supabase.OAuthProvider.google,
+      );
+    } catch (e) {
+      throw AuthException(e.toString());
+    }
+  }
+
+  Future<void> signInWithPhone(String phoneNumber) async {
+    if (isMockMode) {
+      debugPrint('--- MODE SIMULATION ACTIVÉ ---');
+      await Future.delayed(const Duration(seconds: 1));
+      return;
+    }
+
+    try {
+      await supabase.Supabase.instance.client.auth.signInWithOtp(
+        phone: phoneNumber,
+      );
+    } catch (e) {
+      throw AuthException(e.toString());
     }
   }
 
@@ -60,33 +91,15 @@ class AuthService {
       debugPrint('Simulation : Déconnexion (Mock)');
       return;
     }
-    await _googleSignIn.signOut();
-    await _auth.signOut();
-  }
 
-  // Simulation pour le téléphone aussi si besoin
-  Future<void> verifyPhone({
-    required String phoneNumber,
-    required Function(PhoneAuthCredential) verificationCompleted,
-    required Function(FirebaseAuthException) verificationFailed,
-    required Function(String, int?) codeSent,
-    required Function(String) codeAutoRetrievalTimeout,
-  }) async {
-    if (isMockMode) {
-      await Future.delayed(const Duration(seconds: 1));
-      codeSent("mock_verification_id", 123456);
-      return;
-    }
-    
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: verificationCompleted,
-      verificationFailed: verificationFailed,
-      codeSent: codeSent,
-      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-      timeout: const Duration(seconds: 60),
-    );
+    await supabase.Supabase.instance.client.auth.signOut();
   }
 }
 
+class AuthException implements Exception {
+  final String? message;
+  AuthException(this.message);
 
+  @override
+  String toString() => message ?? 'Erreur d\'authentification';
+}

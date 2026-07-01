@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hugeicons/hugeicons.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/responsive/breakpoints.dart';
 import '../../mock/mock_data.dart';

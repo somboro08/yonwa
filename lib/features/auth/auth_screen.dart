@@ -3,11 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../core/theme/colors.dart';
-import '../../core/theme/typography.dart';
 import '../../services/auth_service.dart';
+import '../../theme/yonwa_theme.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -16,12 +14,13 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
+class _AuthScreenState extends State<AuthScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _isPasswordVisible = false;
 
@@ -44,16 +43,13 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     final prefs = await SharedPreferences.getInstance();
     final questionnaireDone = prefs.getBool('questionnaire_done') ?? false;
     if (mounted) {
-      context.go(questionnaireDone ? '/home' : '/questionnaire');
+      context.go(questionnaireDone ? '/app' : '/questionnaire');
     }
   }
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: YonwaColors.error,
-      ),
+      SnackBar(content: Text(message), backgroundColor: YonwaColors.error),
     );
   }
 
@@ -73,28 +69,28 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     setState(() => _isLoading = true);
 
     try {
-      if (AuthService().isMockMode) {
+      final authService = AuthService();
+      if (authService.isMockMode) {
         await Future.delayed(const Duration(seconds: 1));
       } else {
         try {
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: password,
-            );
+          await authService.signInWithEmail(email, password);
+        } on AuthException catch (e) {
+          final message = e.message ?? '';
+          if (message.contains('invalid login credentials') ||
+              message.contains('Invalid login credentials') ||
+              message.contains('Invalid login credentials')) {
+            await authService.signUpWithEmail(email, password);
           } else {
             rethrow;
           }
         }
       }
       await _navigateAfterAuth();
-    } on FirebaseAuthException catch (e) {
+    } on AuthException catch (e) {
       _showError(e.message ?? 'Erreur d\'authentification');
+    } catch (e) {
+      _showError('Erreur d\'authentification');
     } finally {
       setState(() => _isLoading = false);
     }
@@ -110,8 +106,17 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     setState(() => _isLoading = true);
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
-      await _navigateAfterAuth();
+      if (AuthService().isMockMode) {
+        await Future.delayed(const Duration(seconds: 1));
+        await _navigateAfterAuth();
+        return;
+      }
+      await AuthService().signInWithPhone(phone);
+      _showError(
+        'Un code a été envoyé par SMS. Cette fonctionnalité nécessite de configurer Supabase OTP.',
+      );
+    } on AuthException catch (e) {
+      _showError(e.message ?? 'Erreur d\'authentification');
     } catch (e) {
       _showError('Erreur d\'authentification');
     } finally {
@@ -133,57 +138,109 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Logo / Icon
-                  const Center(
-                    child: CircleAvatar(
-                      radius: 36,
-                      backgroundColor: YonwaColors.accentGold,
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedCompass,
-                        color: Colors.white,
-                        size: 36,
+                  // Image en haut
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.asset(
+                      'assets/images/auth_header.jpg',
+                      height: 180,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        height: 180,
+                        decoration: BoxDecoration(
+                          color: YonwaColors.primary50,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Center(
+                          child: HugeIcon(
+                            icon: HugeIcons.strokeRoundedCompass,
+                            color: YonwaColors.primary500,
+                            size: 48,
+                          ),
+                        ),
                       ),
                     ),
-                  ).animate().scale(duration: 400.ms, curve: Curves.easeOutBack),
-                  const SizedBox(height: 24),
+                  ).animate().fadeIn(duration: 400.ms),
+                  const SizedBox(height: 20),
 
-                  // App Title
-                  Text(
-                    'Yonwa',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w800,
-                      color: YonwaColors.textPrimary,
+                  // Logo + Titre sur la même ligne
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                  ).animate().fadeIn(duration: 300.ms, delay: 100.ms),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: YonwaColors.neutral200,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Logo
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: YonwaColors.secondary,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const HugeIcon(
+                            icon: HugeIcons.strokeRoundedCompass,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Titre
+                        Text(
+                          'Yonwa',
+                          style: GoogleFonts.poppins(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w800,
+                            color: YonwaColors.neutral900,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ).animate().scale(
+                    duration: 400.ms,
+                    curve: Curves.easeOutBack,
+                    delay: 100.ms,
+                  ),
                   const SizedBox(height: 8),
 
+                  // Sous-titre
                   Text(
                     'Rejoignez la communauté du savoir-faire',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: YonwaColors.textSecondary,
+                      color: YonwaColors.neutral500,
                     ),
                   ).animate().fadeIn(duration: 300.ms, delay: 200.ms),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
 
                   // TabBar
                   Container(
                     decoration: BoxDecoration(
-                      color: YonwaColors.surfaceMuted,
+                      color: YonwaColors.neutral100,
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: TabBar(
                       controller: _tabController,
                       indicator: BoxDecoration(
-                        color: YonwaColors.accentDeep,
+                        color: YonwaColors.primary500,
                         borderRadius: BorderRadius.circular(100),
                       ),
                       labelColor: Colors.white,
-                      unselectedLabelColor: YonwaColors.textSecondary,
-                      labelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13),
+                      unselectedLabelColor: YonwaColors.neutral500,
+                      labelStyle: GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
                       tabs: const [
                         Tab(text: 'E-mail'),
                         Tab(text: 'Téléphone'),
@@ -211,7 +268,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                   padding: EdgeInsets.all(12.0),
                                   child: HugeIcon(
                                     icon: HugeIcons.strokeRoundedMail02,
-                                    color: YonwaColors.textSecondary,
+                                    color: YonwaColors.neutral500,
                                     size: 20,
                                   ),
                                 ),
@@ -219,11 +276,15 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                 fillColor: YonwaColors.surface,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Color(0xFFEEEEF2)),
+                                  borderSide: const BorderSide(
+                                    color: YonwaColors.neutral200,
+                                  ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Color(0xFFEEEEF2)),
+                                  borderSide: const BorderSide(
+                                    color: YonwaColors.neutral200,
+                                  ),
                                 ),
                               ),
                             ),
@@ -237,7 +298,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                   padding: EdgeInsets.all(12.0),
                                   child: HugeIcon(
                                     icon: HugeIcons.strokeRoundedLockKey,
-                                    color: YonwaColors.textSecondary,
+                                    color: YonwaColors.neutral500,
                                     size: 20,
                                   ),
                                 ),
@@ -246,7 +307,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                     icon: _isPasswordVisible
                                         ? HugeIcons.strokeRoundedView
                                         : HugeIcons.strokeRoundedViewOff,
-                                    color: YonwaColors.textSecondary,
+                                    color: YonwaColors.neutral500,
                                     size: 20,
                                   ),
                                   onPressed: () {
@@ -259,11 +320,15 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                 fillColor: YonwaColors.surface,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Color(0xFFEEEEF2)),
+                                  borderSide: const BorderSide(
+                                    color: YonwaColors.neutral200,
+                                  ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Color(0xFFEEEEF2)),
+                                  borderSide: const BorderSide(
+                                    color: YonwaColors.neutral200,
+                                  ),
                                 ),
                               ),
                             ),
@@ -283,7 +348,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                   padding: EdgeInsets.all(12.0),
                                   child: HugeIcon(
                                     icon: HugeIcons.strokeRoundedSmartPhone01,
-                                    color: YonwaColors.textSecondary,
+                                    color: YonwaColors.neutral500,
                                     size: 20,
                                   ),
                                 ),
@@ -291,11 +356,15 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                 fillColor: YonwaColors.surface,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Color(0xFFEEEEF2)),
+                                  borderSide: const BorderSide(
+                                    color: YonwaColors.neutral200,
+                                  ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Color(0xFFEEEEF2)),
+                                  borderSide: const BorderSide(
+                                    color: YonwaColors.neutral200,
+                                  ),
                                 ),
                               ),
                             ),
@@ -309,7 +378,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                   // Button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: YonwaColors.accentDeep,
+                      backgroundColor: YonwaColors.primary500,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100),
@@ -341,7 +410,12 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                               fontSize: 14,
                             ),
                           ),
-                  ).animate().scale(begin: const Offset(0.95, 0.95), duration: 300.ms, delay: 500.ms, curve: Curves.easeOutBack),
+                  ).animate().scale(
+                    begin: const Offset(0.95, 0.95),
+                    duration: 300.ms,
+                    delay: 500.ms,
+                    curve: Curves.easeOutBack,
+                  ),
                   const SizedBox(height: 16),
 
                   // Continuer sans compte
@@ -352,7 +426,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                     child: Text(
                       'Continuer sans compte',
                       style: GoogleFonts.inter(
-                        color: YonwaColors.textSecondary,
+                        color: YonwaColors.neutral500,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),

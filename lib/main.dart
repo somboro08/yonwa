@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as legacy_provider;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'core/config/supabase_config.dart';
 import 'theme/yonwa_theme.dart';
 import 'theme/theme_provider.dart';
 import 'providers/user_provider.dart';
@@ -16,21 +16,19 @@ import 'core/router/app_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    debugPrint('Firebase initialization failed: $e');
-    debugPrint(
-      'Yonwa: Running in development mode without Firebase configuration.',
-    );
+  if (isSupabaseConfigured) {
+    try {
+      await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+    } catch (e) {
+      debugPrint('Supabase initialization failed: $e');
+      debugPrint('Yonwa: Running without Supabase backend.');
+    }
+  } else {
+    debugPrint('Supabase configuration missing. Running without backend auth.');
   }
 
   await initializeDateFormatting('fr', null);
-  runApp(
-    const ProviderScope(
-      child: YonwaApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: YonwaApp()));
 }
 
 class YonwaApp extends ConsumerWidget {
@@ -42,8 +40,12 @@ class YonwaApp extends ConsumerWidget {
       providers: [
         legacy_provider.ChangeNotifierProvider(create: (_) => ThemeProvider()),
         legacy_provider.ChangeNotifierProvider(create: (_) => UserProvider()),
-        legacy_provider.ChangeNotifierProvider(create: (_) => CommerceProvider()),
-        legacy_provider.ChangeNotifierProvider(create: (_) => BookingProvider()),
+        legacy_provider.ChangeNotifierProvider(
+          create: (_) => CommerceProvider(),
+        ),
+        legacy_provider.ChangeNotifierProvider(
+          create: (_) => BookingProvider(),
+        ),
       ],
       child: MaterialApp.router(
         title: 'Yonwa',
@@ -117,10 +119,12 @@ class _SplashState extends State<_Splash> with SingleTickerProviderStateMixin {
       final questionnaireDone = prefs.getBool('questionnaire_done') ?? false;
 
       bool isLoggedIn = false;
-      try {
-        isLoggedIn = FirebaseAuth.instance.currentUser != null;
-      } catch (e) {
-        debugPrint('Auth error: $e');
+      if (isSupabaseConfigured) {
+        try {
+          isLoggedIn = Supabase.instance.client.auth.currentUser != null;
+        } catch (e) {
+          debugPrint('Auth error: $e');
+        }
       }
 
       if (!mounted) return;

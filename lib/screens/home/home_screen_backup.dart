@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'dart:math';
 import '../../theme/yonwa_theme.dart';
-import '../../theme/theme_provider.dart';
 import '../../models/models.dart';
-import '../../widgets/listing_card.dart';
 import '../../widgets/horizontal_product_scroll.dart';
 import '../../services/auth_service.dart';
 import 'notification_screen.dart';
 import 'explorer_screen.dart';
 import '../profile/profile_screen.dart';
 import '../profile/user_profile_tab.dart';
-import '../listing/all_listings_screen.dart';
 import '../chat/messages_inbox_screen.dart';
 import '../immersive_profile_screen.dart';
 import '../ai_assistant_screen.dart';
 import '../profile/detailed_profile_screen.dart';
 import 'search_screen.dart';
-import '../../providers/user_provider.dart';
 import '../commerce/my_orders_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -406,7 +400,7 @@ class _HomeScreenState extends State<HomeScreen>
     final authService = AuthService();
     final isMock = authService.isMockMode;
 
-    const profileWidget = UserProfileTab();
+    final profileWidget = UserProfileTab();
 
     final size = MediaQuery.of(context).size;
     final drawerWidth = size.width * 0.72;

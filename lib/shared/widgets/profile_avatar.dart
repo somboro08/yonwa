@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hugeicons/hugeicons.dart';
 import '../providers/user_provider.dart';
-import '../../models/models.dart';
 
 /// Avatar cliquable de l'utilisateur courant → ouvre le profil self (/me).
 /// Utilisé dans la sidebar web, le drawer, etc.

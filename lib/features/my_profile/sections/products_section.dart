@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../shared/providers/user_provider.dart';
-import '../../../shared/widgets/skeleton_card.dart';
 
 /// Onglet "Produits" — grille des produits/créations de l'utilisateur.
 /// Alimenté par UserProvider.products (déjà adapté par rôle).

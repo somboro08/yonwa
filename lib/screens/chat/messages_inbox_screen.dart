@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import '../../theme/yonwa_theme.dart';
 import 'chat_detail_screen.dart';
 import '../../core/responsive/responsive_layout.dart';

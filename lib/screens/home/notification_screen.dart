@@ -28,7 +28,6 @@ class _NotificationModel {
     required this.time,
     required this.fullDetail,
     this.isRead = false,
-    this.isStarred = false,
     required this.icon,
     required this.color,
   });

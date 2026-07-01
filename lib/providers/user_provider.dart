@@ -14,7 +14,7 @@ class UserProvider extends ChangeNotifier {
   String _email = 'marc.gbenan@email.com';
   String _telephone = '+229 97 12 34 56';
   UserRole _role = UserRole.voyageur;
-  String _photoUrl = 'https://i.pravatar.cc/300?u=marc';
+  final String _photoUrl = 'https://i.pravatar.cc/300?u=marc';
   String _coverImage = 'assets/images/hero3.png';
   List<String> _coverImages = ['assets/images/hero3.png'];
   String? _customBio;
